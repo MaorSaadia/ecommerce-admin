@@ -7,6 +7,7 @@ import Link from "next/link";
 
 export function MainNav({
   className,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
@@ -20,7 +21,7 @@ export function MainNav({
     {
       href: `/${params.storeId}/billboards`,
       label: "Billboards",
-      active: pathname === `/${params.storeId}/billboard`,
+      active: pathname === `/${params.storeId}/billboards`,
     },
     {
       href: `/${params.storeId}/categories`,
