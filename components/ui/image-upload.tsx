@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImagePlus, Trash } from "lucide-react";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 import { Button } from "@/components/ui/button";
 
@@ -22,14 +22,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>();
+
+  useEffect(() => {
+    ref.current = onChange;
+  });
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onUpload = (result: any) => {
-    onChange(result.info.secure_url);
-  };
+  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // const onUpload = (result: any) => {
+  //   onChange(result.info.secure_url);
+  // };
 
   if (!isMounted) {
     return null;
@@ -57,7 +64,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget onSuccess={onUpload} uploadPreset="fgddon48">
+      <CldUploadWidget
+        onSuccess={(results) => {
+          if (results.info) {
+            const info = results.info as CloudinaryUploadWidgetInfo;
+            ref.current(info.secure_url);
+          }
+        }}
+        uploadPreset="fgddon48"
+      >
         {({ open }) => {
           const onClick = () => {
             open();
